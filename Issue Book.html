@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Material Issuance Form</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+        }
+        input, textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            margin-bottom: 16px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 10px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background-color: #f5f5f5;
+        }
+        button {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Material Issuance Form</h1>
+        <form id="materialForm">
+            <label for="jobName">Job Name:</label>
+            <input type="text" id="jobName" name="jobName" required>
+
+            <label for="project">Project:</label>
+            <input type="text" id="project" name="project" required>
+
+            <label for="justification">Justification:</label>
+            <textarea id="justification" name="justification" rows="4"></textarea>
+
+            <label for="materialIssuedTo">Material Issued To:</label>
+            <input type="text" id="materialIssuedTo" name="materialIssuedTo" required>
+
+            <label for="materialIssuedBy">Material Issued By:</label>
+            <input type="text" id="materialIssuedBy" name="materialIssuedBy" required>
+
+            <h2>Material Details</h2>
+            <table>
+                <tr>
+                    <th>Material</th>
+                    <th>Weight (grams)</th>
+                    <th>Time (hours)</th>
+                </tr>
+                <tr>
+                    <td>3D Printing</td>
+                    <td><input type="number" id="weight3D" name="weight3D" min="0"></td>
+                    <td><input type="number" id="time3D" name="time3D" min="0"></td>
+                </tr>
+                <tr>
+                    <td>Laser Cutting</td>
+                    <td><input type="number" id="weightLaser" name="weightLaser" min="0"></td>
+                    <td><input type="number" id="timeLaser" name="timeLaser" min="0"></td>
+                </tr>
+                <tr>
+                    <td>CNC Machining</td>
+                    <td><input type="number" id="weightCNC" name="weightCNC" min="0"></td>
+                    <td><input type="number" id="timeCNC" name="timeCNC" min="0"></td>
+                </tr>
+            </table>
+
+            <button type="button" onclick="saveDataToFile()">Save Data</button>
+        </form>
+    </div>
+
+
+   <script>
+        function saveDataToFile() {
+            const jobName = document.getElementById("jobName").value;
+            const project = document.getElementById("project").value;
+            const justification = document.getElementById("justification").value;
+            const materialIssuedTo = document.getElementById("materialIssuedTo").value;
+            const materialIssuedBy = document.getElementById("materialIssuedBy").value;
+
+            // Get data from the table (3x3)
+            const tableData = document.querySelectorAll("table tr:not(:first-child)");
+            let materialDetails = "";
+            tableData.forEach(row => {
+                const cells = row.querySelectorAll("td");
+                const material = cells[0].textContent;
+                const weight = cells[1].textContent;
+                const time = cells[2].textContent;
+                materialDetails += `${material}: Weight ${weight}g, Time ${time} hours\n`;
+            });
+
+            const dataToSave = `Job Name: ${jobName}\nProject: ${project}\nJustification: ${justification}\nMaterial Issued To: ${materialIssuedTo}\nMaterial Issued By: ${materialIssuedBy}\n\n${materialDetails}`;
+
+            const blob = new Blob([dataToSave], { type: "text/plain" });
+            const a = document.createElement("a");
+            a.href = URL.createObjectURL(blob);
+            a.download = "material_data.txt";
+            a.click();
+        }
+    </script>
+</body>
+</html>
