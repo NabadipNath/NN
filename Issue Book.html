@@ -121,17 +121,36 @@
             tableData.forEach(row => {
                 const cells = row.querySelectorAll("td");
                 const material = cells[0].textContent;
-                const weight = cells[1].textContent;
-                const time = cells[2].textContent;
-                materialDetails += `${material}: Weight ${weight}g, Time ${time} hours\n`;
+                const weight = cells[1].querySelector("input").value;
+                const time = cells[2].querySelector("input").value;
+                materialDetails += `${material}: Weight ${weight}g, Time ${time} hours<br>`;
             });
 
-            const dataToSave = `Job Name: ${jobName}\nProject: ${project}\nJustification: ${justification}\nMaterial Issued To: ${materialIssuedTo}\nMaterial Issued By: ${materialIssuedBy}\n\n${materialDetails}`;
+            const dataToSave = `
+                <!DOCTYPE html>
+                <html lang="en">
+                <head>
+                    <meta charset="UTF-8">
+                    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                    <title>Material Issuance Form Data</title>
+                </head>
+                <body>
+                    <h1>Material Issuance Form Data</h1>
+                    <p><strong>Job Name:</strong> ${jobName}</p>
+                    <p><strong>Project:</strong> ${project}</p>
+                    <p><strong>Justification:</strong> ${justification}</p>
+                    <p><strong>Material Issued To:</strong> ${materialIssuedTo}</p>
+                    <p><strong>Material Issued By:</strong> ${materialIssuedBy}</p>
+                    <h2>Material Details</h2>
+                    <p>${materialDetails}</p>
+                </body>
+                </html>
+            `;
 
-            const blob = new Blob([dataToSave], { type: "text/plain" });
+            const blob = new Blob([dataToSave], { type: "text/html" });
             const a = document.createElement("a");
             a.href = URL.createObjectURL(blob);
-            a.download = "material_data.txt";
+            a.download = "material_data.html";
             a.click();
         }
     </script>
